@@ -69,16 +69,13 @@ LOCAL_C_INCLUDES :=	\
 LOCAL_LDLIBS_darwin += -lncurses
 LOCAL_LDLIBS_linux += -lncurses
 LOCAL_LDLIBS_linux += -lgcc_s
+LOCAL_LDLIBS_windows += -luuid
 
 LOCAL_IS_HOST_MODULE := true
 
-ifeq ($(HOST_PREFER_32_BIT),true)
-LOCAL_MULTILIB := 32
-else
 ifeq (libLLVM, $(filter libLLVM,$(LOCAL_SHARED_LIBRARIES)$(LOCAL_SHARED_LIBRARIES_$(HOST_OS))))
 # Skip building a 32-bit shared object if they are using libLLVM.
 LOCAL_MULTILIB := first
-endif
 endif
 
 ###########################################################
@@ -94,5 +91,5 @@ $(hide) $(LLVM_TBLGEN) \
 	-I $(LLVM_ROOT_PATH)/lib/Target	\
 	$(if $(strip $(CLANG_ROOT_PATH)),-I $(CLANG_ROOT_PATH)/include,)	\
 	-gen-$(strip $(1))	\
-	-o $@ $<
+	-d $@.d -o $@ $<
 endef
